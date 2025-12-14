@@ -61,7 +61,7 @@ PICOLIBC_FLAGS:=\
 
 .PHONY: default binutils gcc picolibc gxx clean
 
-default: binutils gcc picolibc gxx
+default: binutils gcc picolibc
 
 binutils: ${BINUTILS_MAK}
 	make -C ${BINUTILS_BIN} -j ${JOBS}
