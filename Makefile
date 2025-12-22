@@ -46,18 +46,9 @@ PICOLIBC_VER:=1.8.10
 PICOLIBC_TAR:=${TAR_DIR}/picolibc-${PICOLIBC_VER}
 PICOLIBC_SRC:=${SRC_DIR}/picolibc-${PICOLIBC_VER}
 PICOLIBC_BIN:=${BUILD_DIR}/picolibc
-PICOLIBC_CFG:=${PICOLIBC_SRC}/CMakeLists.txt
+PICOLIBC_CFG:=${PICOLIBC_SRC}/meson.build
 PICOLIBC_MAK:=${PICOLIBC_BIN}/Makefile
-PICOLIBC_FLAGS:=\
-	-DCMAKE_SYSTEM_NAME=Generic \
-	-DCMAKE_SYSTEM_PROCESSOR=${${TARGET}_PROCESSOR} \
-	-DCMAKE_C_COMPILER=/opt/${PROJECT}/bin/${TARGET}-gcc \
-	-DCMAKE_C_COMPILER_WORKS=TRUE \
-	-DCMAKE_ASM_COMPILER=/opt/${PROJECT}/bin/${TARGET}-gcc \
-	-DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY \
-	-DPICOLIBC_USE_MODULE=ON \
-	-DCMAKE_BUILD_TYPE=MinSizeRel \
-	-DCMAKE_INSTALL_PREFIX=/opt/${PROJECT}
+PICOLIBC_FLAGS:=--prefix=/ -Dspecsdir=/lib -Dsystem-libc=true
 
 .PHONY: default binutils gcc picolibc gxx clean
 
@@ -76,8 +67,9 @@ gxx: ${GXX_MAK}
 	make -C ${GXX_BIN} install
 
 picolibc: ${PICOLIBC_MAK}
-	make -C ${PICOLIBC_BIN} -j ${JOBS}
-	make -C ${PICOLIBC_BIN} install
+	ninja -C ${PICOLIBC_BIN}
+	DESTDIR=/opt/${PROJECT}/${TARGET} ninja -C ${PICOLIBC_BIN} install  
+	touch /opt/${PROJECT}/${TARGET}/lib/libgloss.a
 
 clean:
 	rm -r -I ${BUILD_DIR}
@@ -125,4 +117,4 @@ ${PICOLIBC_CFG} : ${PICOLIBC_TAR} | ${SRC_DIR}
 	touch $@
 
 ${PICOLIBC_MAK} : ${PICOLIBC_CFG} | ${PICOLIBC_BIN}
-	cd ${PICOLIBC_BIN} && cmake ${RELP}/${PICOLIBC_SRC} ${PICOLIBC_FLAGS}
+	cd ${PICOLIBC_BIN} && meson setup --cross-file=${RELP}/cross-file.cfg ${PICOLIBC_FLAGS} ${RELP}/${PICOLIBC_SRC} 
