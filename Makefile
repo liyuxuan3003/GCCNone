@@ -16,7 +16,7 @@ SRC_DIR:=src
 
 COMMON_FLAGS:=--prefix=/opt/${PROJECT} --program-prefix=${TARGET}- --target=${TARGET} -disable-nls
 
-riscv-none-elf_FLAGS:=--with-arch=rv32im_zicsr_zifencei --with-abi=ilp32 --disable-multilib 
+riscv-none-elf_FLAGS:=--with-arch=rv32imfdv --with-abi=ilp32d --disable-multilib 
 riscv-none-elf_PROCESSOR:=riscv
 
 arm-none-eabi_FLAGS:=--with-multilib-list=rmprofile
