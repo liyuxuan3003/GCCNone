@@ -16,7 +16,13 @@ SRC_DIR:=src
 
 COMMON_FLAGS:=--prefix=/opt/${PROJECT} --program-prefix=${TARGET}- --target=${TARGET} -disable-nls
 
-riscv-none-elf_FLAGS:=--enable-multilib --with-multilib-generator="rv32i-ilp32--;rv32im-ilp32--;rv32imfdv-ilp32d--" 
+riscv-none-elf_MULTILIB:=\
+	rv32imfdv-ilp32d--;rv32imfdcv-ilp32d--;rv32imafdv-ilp32d--;\
+	rv32imfd-ilp32d--;rv32imfdc-ilp32d--;rv32imafdc-ilp32d--;\
+	rv32imf-ilp32f--;rv32imfc-ilp32f--;rv32imafc-ilp32f--;\
+	rv32im-ilp32--;rv32imc-ilp32--;rv32imac-ilp32--;\
+	rv32i-ilp32--;rv32ic-ilp32--
+riscv-none-elf_FLAGS:=--enable-multilib --with-multilib-generator="${riscv-none-elf_MULTILIB}" 
 riscv-none-elf_PROCESSOR:=riscv
 
 arm-none-eabi_FLAGS:=--with-multilib-list=rmprofile
