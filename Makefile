@@ -48,7 +48,7 @@ PICOLIBC_SRC:=${SRC_DIR}/picolibc-${PICOLIBC_VER}
 PICOLIBC_BIN:=${BUILD_DIR}/picolibc
 PICOLIBC_CFG:=${PICOLIBC_SRC}/meson.build
 PICOLIBC_MAK:=${PICOLIBC_BIN}/Makefile
-PICOLIBC_FLAGS:=--prefix=/opt/${PROJECT}/${TARGET} -Dmultilib=true
+PICOLIBC_FLAGS:=--prefix=/ -Dmultilib=true
 
 .PHONY: default binutils gcc picolibc gxx clean
 
@@ -68,7 +68,7 @@ gxx: ${GXX_MAK}
 
 picolibc: ${PICOLIBC_MAK}
 	ninja -C ${PICOLIBC_BIN}
-	ninja -C ${PICOLIBC_BIN} install  
+	DESTDIR=/opt/${PROJECT}/${TARGET} ninja -C ${PICOLIBC_BIN} install  
 	touch /opt/${PROJECT}/${TARGET}/lib/libgloss.a
 
 clean:
