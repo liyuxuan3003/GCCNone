@@ -16,7 +16,7 @@ SRC_DIR:=src
 
 COMMON_FLAGS:=--prefix=/opt/${PROJECT} --program-prefix=${TARGET}- --target=${TARGET} -disable-nls
 
-riscv-none-elf_FLAGS:=--with-arch=rv32imfdv --with-abi=ilp32d --disable-multilib 
+riscv-none-elf_FLAGS:=--enable-multilib --with-multilib-generator="rv32i-ilp32--;rv32im-ilp32--;rv32imfdv-ilp32d--" 
 riscv-none-elf_PROCESSOR:=riscv
 
 arm-none-eabi_FLAGS:=--with-multilib-list=rmprofile
@@ -48,7 +48,7 @@ PICOLIBC_SRC:=${SRC_DIR}/picolibc-${PICOLIBC_VER}
 PICOLIBC_BIN:=${BUILD_DIR}/picolibc
 PICOLIBC_CFG:=${PICOLIBC_SRC}/meson.build
 PICOLIBC_MAK:=${PICOLIBC_BIN}/Makefile
-PICOLIBC_FLAGS:=--prefix=/ -Dspecsdir=/lib -Dsystem-libc=true
+PICOLIBC_FLAGS:=--prefix=/opt/${PROJECT}/${TARGET} -Dmultilib=true
 
 .PHONY: default binutils gcc picolibc gxx clean
 
@@ -68,7 +68,7 @@ gxx: ${GXX_MAK}
 
 picolibc: ${PICOLIBC_MAK}
 	ninja -C ${PICOLIBC_BIN}
-	DESTDIR=/opt/${PROJECT}/${TARGET} ninja -C ${PICOLIBC_BIN} install  
+	ninja -C ${PICOLIBC_BIN} install  
 	touch /opt/${PROJECT}/${TARGET}/lib/libgloss.a
 
 clean:
